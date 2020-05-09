@@ -119,7 +119,26 @@ class Board(object):
         Returns:
             bool: True if the input path is valid
         '''
-
+        
+        if len(path) == 1:
+            return True
+        elif len(path) == 0:
+            return True
+        elif len(path) != len(set(path)):
+            return False
+        
+        else:
+            for i in range(len(path)-1):
+                current_position= path[i]
+                current_neighbors = risk.definitions.territory_neighbors[current_position]
+                next_position = path[i+1]
+                if next_position not in current_neighbors:
+                    return False
+            return True
+            
+               
+ 
+            
     
     def is_valid_attack_path(self, path):
         '''
@@ -139,7 +158,14 @@ class Board(object):
             bool: True if the path is an attack path
         '''
 
-
+        if len(path) < 2: return False    #check if an attack path is at least two territories    
+        elif self._is_path_valid(path) is False: return False       #check if the path itself is valid
+        
+        else:
+            for nation in path:
+                if path[0] != nation and self.owner(nation) == self.owner(path[0]):   #checks if we don't occupy this land and that that the owner of that land is not the user, if it is us we cannot attack it. 
+                    return False
+            return True
     def cost_of_attack_path(self, path):
         '''
         The cost of an attack path is the total number of enemy armies in the path.
@@ -151,7 +177,12 @@ class Board(object):
         Returns:
             bool: the number of enemy armies in the path
         '''
-
+        enemy_armies = 0
+        for nation in path:
+            if country == path[0]:
+                skip
+            enemy_armies = self.armies(nation)
+        return enemy_armies
 
     def shortest_path(self, source, target):
         '''
@@ -210,7 +241,7 @@ class Board(object):
         Returns:
             bool: True if a valid attack path exists between source and target; else False
         '''
-
+        
 
     # ======================= #
     # == Continent Methods == #
